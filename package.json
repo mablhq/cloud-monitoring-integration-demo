@@ -1,0 +1,17 @@
+{
+  "name": "@mabl/stack-driver-integration-demo",
+  "description": "Mabl Demo for integrating test output with stack driver monitoring",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mablhq/stack-driver-integration-demo"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": "6.11.1"
+  },
+  "dependencies": {
+    "@google-cloud/monitoring": "0.4.1"
+  },
+  "devDependencies": {
+  }
+}

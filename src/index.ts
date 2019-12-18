@@ -6,6 +6,8 @@ const client = new monitoring.MetricServiceClient();
 
 const projectId = process.env["GCLOUD_PROJECT"] || process.env["GCP_PROJECT"];
 
+import express = require("express");
+
 type Plan = {
   id: string;
   name: string;
@@ -15,7 +17,7 @@ type JourneyExecution = {
   status: string;
 };
 
-exports.handlePlanWebhook = (req: any, res: any) => {
+exports.handlePlanWebhook = (req: express.Request, res: express.Response) => {
   const body = req.body;
   Promise.resolve(
     processResultsAndWriteMetric(body.plan, body.journey_executions)

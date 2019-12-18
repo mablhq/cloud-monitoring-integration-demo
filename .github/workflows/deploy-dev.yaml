@@ -1,4 +1,4 @@
-name: build_and_deploy
+name: build_and_deploy_dev
 on:
   push:
     branches:
@@ -6,6 +6,7 @@ on:
     paths:
       - "**.ts"
       - "package.json"
+      - ".github/workflows/deploy-dev.yaml"
 jobs:
   deploy-dev:
     runs-on: ubuntu-latest
@@ -15,4 +16,4 @@ jobs:
         with:
           version: "274.0.0"
           service_account_key: ${{ secrets.GCP_SA_KEY_DEV }}
-      - run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs10 --trigger-http
+      - run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs10 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-dev --entry-point=handlePlanWebhook

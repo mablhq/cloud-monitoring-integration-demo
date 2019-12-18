@@ -1,0 +1,17 @@
+{
+  "exclude": ["**/*.spec.ts"],
+  "compilerOptions": {
+    "outDir": "./lib" /* Redirect output structure to the directory. */,
+    "rootDir": "./src",
+    "module": "commonjs",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "removeComments": true,
+    "strict": true,
+    "target": "es2016"
+  }
+}

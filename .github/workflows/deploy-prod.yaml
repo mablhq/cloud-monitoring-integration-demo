@@ -12,4 +12,4 @@ jobs:
         with:
           version: "274.0.0"
           service_account_key: ${{ secrets.GCP_SA_KEY_PROD }}
-      - run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs10 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-prod --entry-point=handlePlanWebhook --region us-central-1
+      - run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs10 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-prod --entry-point=handlePlanWebhook --region us-central-1 --allow-unauthenticated

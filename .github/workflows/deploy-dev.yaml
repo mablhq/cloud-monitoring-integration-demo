@@ -3,10 +3,6 @@ on:
   push:
     branches:
       - master
-    paths:
-      - "**.ts"
-      - "package.json"
-      - ".github/workflows/deploy-dev.yaml"
 jobs:
   deploy-dev:
     runs-on: ubuntu-latest

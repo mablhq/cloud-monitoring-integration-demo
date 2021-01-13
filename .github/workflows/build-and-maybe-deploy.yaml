@@ -40,14 +40,14 @@ jobs:
         npm run build
 
     - name: Auth to Dev
-      #if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/master'
       uses: google-github-actions/setup-gcloud@master
       with:
         project_id: 'mabl-dev'
         service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_DEV }}
 
     - name: Deploy to Dev
-      #if: github.ref == 'refs/heads/master'
+      if: github.ref == 'refs/heads/master'
       run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs10 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-dev --entry-point=handlePlanWebhook --region us-central1 --allow-unauthenticated --set-env-vars=GCP_PROJECT=mabl-dev
 
     - name: Auth to Prod

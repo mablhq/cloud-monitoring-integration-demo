@@ -27,10 +27,9 @@ type CreateMetricRequest = {
 exports.handlePlanWebhook = async (req: express.Request, res: express.Response): Promise<void> => {
   try {
     const body = req.body as CreateMetricRequest;
-    const [, maybeWrittenMetric] = await processResultsAndWriteMetric(body.plan, body.journey_executions);
+    await processResultsAndWriteMetric(body.plan, body.journey_executions);
 
-    // console.log(`Successful wrote metric [${maybeWrittenMetric?.timeSeries?.[0].resource?.type}]`);
-    console.log(`Successful wrote metric [${JSON.stringify(maybeWrittenMetric)}]`);
+    console.log(`Successful wrote metric`);
     res.status(200).end();
   } catch (error) {
     console.error("ERROR:", error);

@@ -2,14 +2,15 @@ name: build_and_deploy_dev
 on:
   push:
     branches:
-      - master
+      - '*' 
+      #- master
 jobs:
   deploy-dev:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+      - uses: actions/checkout@v2
+      - uses: google-github-actions/setup-gcloud
         with:
-          version: "322.0.0"
-          service_account_key: ${{ secrets.GCP_SA_KEY_DEV }}
+          project_id: 'mabl-dev'
+          service_account_key: ${{ secrets.gcp_sa_key_dev }}
       - run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs8 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-dev --entry-point=handlePlanWebhook --region us-central1 --allow-unauthenticated

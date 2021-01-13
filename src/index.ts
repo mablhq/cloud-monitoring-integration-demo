@@ -19,7 +19,6 @@ type JourneyExecution = {
 
 exports.handlePlanWebhook = (req: express.Request, res: express.Response) => {
   const body = req.body;
-  console.log(`Processing body [%j]`, body); // debugging
   return Promise.resolve(
     processResultsAndWriteMetric(body.plan, body.journey_executions)
   )

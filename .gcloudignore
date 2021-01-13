@@ -18,4 +18,4 @@
 *.yaml
 
 node_modules
-#!include:.gitignore
+!include:lib/

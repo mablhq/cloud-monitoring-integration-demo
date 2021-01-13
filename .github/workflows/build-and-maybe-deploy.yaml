@@ -38,7 +38,6 @@ jobs:
     - name: Build
       run: |
         npm run build
-        rm .gitignore
 
     - name: Auth to Dev
       #if: github.ref == 'refs/heads/master'

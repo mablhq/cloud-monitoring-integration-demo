@@ -1,4 +1,4 @@
-gname: Build and Maybe Deploy
+name: Build and Maybe Deploy
 on:
   push:
     branches:
@@ -38,7 +38,6 @@ jobs:
     - name: Build
       run: |
         npm run build
-        ls -l lib/
 
     - name: Auth to Dev
       #if: github.ref == 'refs/heads/master'

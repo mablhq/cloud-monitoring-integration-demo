@@ -1,10 +1,12 @@
 // Imports the Google Cloud client library
+import * as protos from '@google-cloud/monitoring/build/protos/protos';
+
 const monitoring = require("@google-cloud/monitoring");
 
 // Creates a client
 const client = new monitoring.MetricServiceClient();
 
-const projectId = process.env["GCLOUD_PROJECT"] || process.env["GCP_PROJECT"];
+const projectId = process.env["GCLOUD_PROJECT"] ?? process.env["GCP_PROJECT"];
 
 import express = require("express");
 
@@ -17,25 +19,29 @@ type JourneyExecution = {
   status: string;
 };
 
-exports.handlePlanWebhook = (req: express.Request, res: express.Response) => {
-  const body = req.body;
-  return Promise.resolve(
-    processResultsAndWriteMetric(body.plan, body.journey_executions)
-  )
-    .then(() => res.status(200).end())
-    .catch(err => {
-      console.error("ERROR:", err);
-      res.status(500).end();
-    });
+type CreateMetricRequest = {
+  plan: Plan;
+  journey_executions: JourneyExecution[];
+}
+
+exports.handlePlanWebhook = async (req: express.Request, res: express.Response): Promise<void> => {
+  try {
+    const body = req.body as CreateMetricRequest;
+    const [, maybeWrittenMetric] = await processResultsAndWriteMetric(body.plan, body.journey_executions);
+
+    console.log('Successful wrote metric [{}]', maybeWrittenMetric?.name);
+    res.status(200).end();
+  } catch (error) {
+    console.error("ERROR:", error);
+    res.status(500).end();
+  }
 };
 
 function processResultsAndWriteMetric(
   plan: Plan,
   journeyExecutions: Array<JourneyExecution>
-) {
-  const testsFailing = journeyExecutions.filter(execution => {
-    return execution.status === "failed";
-  });
+): Promise<[protos.google.protobuf.IEmpty, protos.google.monitoring.v3.ICreateTimeSeriesRequest | undefined, {} | undefined]> {
+  const testsFailing = journeyExecutions.filter(execution => execution.status === "failed");
 
   const dataPoint = {
     interval: {

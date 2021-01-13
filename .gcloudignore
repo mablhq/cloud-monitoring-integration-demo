@@ -13,7 +13,8 @@
 .git
 .gitignore
 *.sh
-*.rm
+*.md
+*.ts
 *.yml
 *.yaml
 *.crt

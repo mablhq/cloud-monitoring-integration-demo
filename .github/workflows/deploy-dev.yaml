@@ -12,5 +12,5 @@ jobs:
       - uses: google-github-actions/setup-gcloud@master
         with:
           project_id: 'mabl-dev'
-          service_account_key: ${{ secrets.gcp_sa_key_dev }}
+          service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_DEV }}
       - run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs8 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-dev --entry-point=handlePlanWebhook --region us-central1 --allow-unauthenticated

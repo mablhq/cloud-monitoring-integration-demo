@@ -16,6 +16,9 @@
 *.rm
 *.yml
 *.yaml
+*.crt
+*.pem
 
 node_modules
-!include:lib/
+
+# NOTE: we are NOT including the .gitignore file! Otherwise, lib/ won't be included, and we'll have no code

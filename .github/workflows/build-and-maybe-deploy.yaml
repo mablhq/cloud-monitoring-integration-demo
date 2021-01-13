@@ -7,7 +7,7 @@ on:
     tags:
       - '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].[0-9]+'
 jobs:
-  deploy-dev:
+  build-deploy-dev:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -39,18 +39,24 @@ jobs:
       run: |
         npm run build
 
-    - name: Deploy to Dev
+    - name: Auth to Dev
       if: github.ref == 'refs/heads/master'
       uses: google-github-actions/setup-gcloud@master
       with:
         project_id: 'mabl-dev'
         service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_DEV }}
+
+    - name: Deploy to Dev
+      if: github.ref == 'refs/heads/master'
       run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs8 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-dev --entry-point=handlePlanWebhook --region us-central1 --allow-unauthenticated
 
-    - name: Deploy to Prod
+    - name: Auth to Prod
       if: contains(github.ref, 'refs/tags/')
       uses: google-github-actions/setup-gcloud@master
       with:
         project_id: 'mabl-prod'
         service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_PROD }}
-      run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs8 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-dev --entry-point=handlePlanWebhook --region us-central1 --allow-unauthenticated
+
+    - name: Deploy to Prod
+      if: contains(github.ref, 'refs/tags/')
+      run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs8 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-prod --entry-point=handlePlanWebhook --region us-central1 --allow-unauthenticated

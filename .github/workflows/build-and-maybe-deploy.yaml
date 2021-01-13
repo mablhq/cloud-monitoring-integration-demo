@@ -38,6 +38,7 @@ jobs:
     - name: Build
       run: |
         npm run build
+        ls -l lib/
 
     - name: Auth to Dev
       #if: github.ref == 'refs/heads/master'

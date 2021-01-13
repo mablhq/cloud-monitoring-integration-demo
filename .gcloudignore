@@ -12,6 +12,10 @@
 # below:
 .git
 .gitignore
+*.sh
+*.rm
+*.yml
+*.yaml
 
 node_modules
 #!include:.gitignore

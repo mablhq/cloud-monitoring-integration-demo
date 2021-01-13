@@ -49,7 +49,7 @@ jobs:
 
     - name: Deploy to Dev
       #if: github.ref == 'refs/heads/master'
-      run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs8 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-dev --entry-point=handlePlanWebhook --region us-central1 --allow-unauthenticated
+      run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs10 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-dev --entry-point=handlePlanWebhook --region us-central1 --allow-unauthenticated
 
     - name: Auth to Prod
       if: contains(github.ref, 'refs/tags/')
@@ -60,4 +60,4 @@ jobs:
 
     - name: Deploy to Prod
       if: contains(github.ref, 'refs/tags/')
-      run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs8 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-prod --entry-point=handlePlanWebhook --region us-central1 --allow-unauthenticated
+      run: gcloud functions deploy ${{ secrets.WEBHOOK_NAME }} --runtime nodejs10 --trigger-http --update-labels "app_hash=${{ github.sha}},app_name=handle_plan_webhook" --project=mabl-prod --entry-point=handlePlanWebhook --region us-central1 --allow-unauthenticated

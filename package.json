@@ -11,7 +11,7 @@
     "node": "10.12.0"
   },
   "scripts": {
-    "gcp-build": "tsc"
+    "build": "tsc"
   },
   "dependencies": {
     "@google-cloud/monitoring": "^2.1.5",

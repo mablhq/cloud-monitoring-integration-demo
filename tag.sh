@@ -2,7 +2,7 @@
 
 BRANCH=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/')
 if [ "$BRANCH" != "main" ]; then
-	echo "Must be on defailt branch to tag"
+	echo "Must be on default branch to tag"
 	exit 1
 fi
 

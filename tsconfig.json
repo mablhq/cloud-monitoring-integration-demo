@@ -12,6 +12,6 @@
     "noUnusedParameters": true,
     "removeComments": true,
     "strict": true,
-    "target": "es2016"
+    "target": "ES2020"
   }
 }

@@ -1,3 +1,3 @@
-# stack-driver-integration-demo
+# Google Cloud Monitoring Integration Demo 
 
-Example of Google Cloud Function that transcribes events to Google Cloud Monitoring
+Example of Google Cloud Function that transcribes events to Google Cloud Monitoring (erstwhile Stackdriver)

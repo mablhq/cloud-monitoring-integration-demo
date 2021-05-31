@@ -38,6 +38,7 @@ jobs:
     - name: Build
       run: |
         npm run build
+        npm prune --production 
 
     - name: Auth to Dev
       #if: github.ref == 'refs/heads/main'

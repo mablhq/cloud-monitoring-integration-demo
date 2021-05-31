@@ -29,7 +29,7 @@ exports.handlePlanWebhook = async (req: express.Request, res: express.Response):
     const body = req.body as CreateMetricRequest;
     await processResultsAndWriteMetric(body.plan, body.journey_executions);
 
-    console.log(`Successful wrote metric`);
+    console.log(`Successfully wrote metric`);
     res.status(200).end();
   } catch (error) {
     console.error("ERROR:", error);

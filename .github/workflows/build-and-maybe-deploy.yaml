@@ -42,7 +42,7 @@ jobs:
 
     - name: Auth to Dev
       if: github.ref == 'refs/heads/main'
-      uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: 'mabl-dev'
         service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_DEV }}
@@ -66,7 +66,7 @@ jobs:
 
     - name: Auth to Prod
       if: contains(github.ref, 'refs/tags/')
-      uses: google-github-actions/setup-gcloud@master
+      uses: google-github-actions/setup-gcloud@v0
       with:
         project_id: 'mabl-prod'
         service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_PROD }}

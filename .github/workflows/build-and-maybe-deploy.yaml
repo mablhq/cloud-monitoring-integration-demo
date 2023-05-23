@@ -6,14 +6,20 @@ on:
     # Note this is NOT REGEX - see https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     tags:
       - '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].[0-9]+'
+
+# Only allow one build at a time on given branch or tag
+concurrency:
+  group: "stack-driver-integration-demo-${{ github.ref }}"
+
 jobs:
   build-deploy-dev:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: actions/setup-node@v2
+    - uses: actions/setup-node@v3
       with:
-        node-version: '14.x' # Build on target deploy version
+        node-version-file: '.nvmrc'
+        cache: npm
 
     # Use caching to speed reload
     - uses: actions/cache@v2
@@ -42,7 +48,7 @@ jobs:
 
     - name: Auth to Dev
       if: github.ref == 'refs/heads/main'
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: 'mabl-dev'
         service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_DEV }}
@@ -53,7 +59,7 @@ jobs:
         GIT_SHA=${{ github.sha }}
         GIT_SHA_SHORT=${GIT_SHA:0:7}
         gcloud functions deploy ${{ secrets.WEBHOOK_NAME }}\
-         --runtime nodejs14\
+         --runtime nodejs18\
          --trigger-http\
          --update-labels "app_hash=${GIT_SHA_SHORT},app_name=handle_plan_webhook"\
          --project=mabl-dev\
@@ -66,7 +72,7 @@ jobs:
 
     - name: Auth to Prod
       if: contains(github.ref, 'refs/tags/')
-      uses: google-github-actions/setup-gcloud@v0
+      uses: google-github-actions/setup-gcloud@v1
       with:
         project_id: 'mabl-prod'
         service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_PROD }}
@@ -77,7 +83,7 @@ jobs:
         GIT_SHA=${{ github.sha }}
         GIT_SHA_SHORT=${GIT_SHA:0:7}
         gcloud functions deploy ${{ secrets.WEBHOOK_NAME }}\
-         --runtime nodejs14\
+         --runtime nodejs18\
          --trigger-http\
          --update-labels "app_hash=${GIT_SHA_SHORT},app_name=handle_plan_webhook"\
          --project=mabl-prod\

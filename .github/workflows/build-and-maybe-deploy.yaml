@@ -6,6 +6,11 @@ on:
     # Note this is NOT REGEX - see https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     tags:
       - '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].[0-9]+'
+
+# Only allow one build at a time on given branch or tag
+concurrency:
+  group: "stack-driver-integration-demo-${{ github.ref }}"
+
 jobs:
   build-deploy-dev:
     runs-on: ubuntu-latest

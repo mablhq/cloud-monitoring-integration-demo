@@ -14,7 +14,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@google-cloud/monitoring": "2.3.5",
+    "@google-cloud/monitoring": "4.0.0",
     "typescript": "4.7.2"
   },
   "devDependencies": {

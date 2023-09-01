@@ -59,6 +59,7 @@ jobs:
          --allow-unauthenticated\
          --set-env-vars=GCP_PROJECT=mabl-dev\
          --service-account=${{ secrets.GCF_SERVICE_ACCOUNT_MABL_DEV }}\
+         --set-build-env-vars=GOOGLE_NODE_RUN_SCRIPTS="" \
          --security-level=secure-always
 
     - name: Auth to Prod
@@ -83,4 +84,5 @@ jobs:
          --allow-unauthenticated\
          --set-env-vars=GCP_PROJECT=mabl-prod\
          --service-account=${{ secrets.GCF_SERVICE_ACCOUNT_MABL_PROD }}\
+         --set-build-env-vars=GOOGLE_NODE_RUN_SCRIPTS="" \
          --security-level=secure-always

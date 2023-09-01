@@ -2,14 +2,14 @@ name: Build and Maybe Deploy
 on:
   push:
     branches:
-      - '*'
+      - '**'
     # Note this is NOT REGEX - see https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#filter-pattern-cheat-sheet
     tags:
       - '[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].[0-9]+'
 
 # Only allow one build at a time on given branch or tag
 concurrency:
-  group: "stack-driver-integration-demo-${{ github.ref }}"
+  group: "cloud-monitoring-integration-demo-${{ github.ref }}"
 
 jobs:
   build-deploy-dev:
@@ -20,15 +20,6 @@ jobs:
       with:
         node-version-file: '.nvmrc'
         cache: npm
-
-    # Use caching to speed reload
-    - uses: actions/cache@v2
-      with:
-        path: ~/.npm
-        key: ${{ runner.OS }}-node-${{ hashFiles('package.json') }}
-        restore-keys: |
-            ${{ runner.OS }}-node-
-            ${{ runner.OS }}
 
     - name: Install Dependencies
       run: |
@@ -46,12 +37,15 @@ jobs:
         npm run build
         npm prune --production 
 
-    - name: Auth to Dev
-      if: github.ref == 'refs/heads/main'
+    - name: Install gcloud
       uses: google-github-actions/setup-gcloud@v1
+
+    - name: Auth gcloud
+      uses: google-github-actions/auth@v1
+      if: github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/')
       with:
-        project_id: 'mabl-dev'
-        service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_DEV }}
+        project_id: ${{ contains(github.ref, 'refs/tags/') && 'mabl-prod' || 'mabl-dev' }}
+        credentials_json: "${{ contains(github.ref, 'refs/tags/') && secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_PROD || secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_DEV }}"
 
     - name: Deploy to Dev
       if: github.ref == 'refs/heads/main'
@@ -68,14 +62,8 @@ jobs:
          --allow-unauthenticated\
          --set-env-vars=GCP_PROJECT=mabl-dev\
          --service-account=${{ secrets.GCF_SERVICE_ACCOUNT_MABL_DEV }}\
+         --set-build-env-vars=GOOGLE_NODE_RUN_SCRIPTS="" \
          --security-level=secure-always
-
-    - name: Auth to Prod
-      if: contains(github.ref, 'refs/tags/')
-      uses: google-github-actions/setup-gcloud@v1
-      with:
-        project_id: 'mabl-prod'
-        service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_PROD }}
 
     - name: Deploy to Prod
       if: contains(github.ref, 'refs/tags/')
@@ -92,4 +80,5 @@ jobs:
          --allow-unauthenticated\
          --set-env-vars=GCP_PROJECT=mabl-prod\
          --service-account=${{ secrets.GCF_SERVICE_ACCOUNT_MABL_PROD }}\
+         --set-build-env-vars=GOOGLE_NODE_RUN_SCRIPTS="" \
          --security-level=secure-always

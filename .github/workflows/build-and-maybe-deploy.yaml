@@ -37,15 +37,18 @@ jobs:
         npm run build
         npm prune --production 
 
-    - name: Auth to Dev
-      if: github.ref == 'refs/heads/main'
+    - name: Install gcloud
       uses: google-github-actions/setup-gcloud@v1
+
+    - name: Auth gcloud
+      uses: google-github-actions/auth@v1
+      #if: github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/')
       with:
-        project_id: 'mabl-dev'
-        service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_DEV }}
+        project_id: ${{ contains(github.ref, 'refs/tags/') && 'mabl-prod' || 'mabl-dev' }}
+        credentials_json: "${{ contains(github.ref, 'refs/tags/') && secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_PROD || secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_DEV }}"
 
     - name: Deploy to Dev
-      if: github.ref == 'refs/heads/main'
+      #if: github.ref == 'refs/heads/main'
       run: |
         GIT_SHA=${{ github.sha }}
         GIT_SHA_SHORT=${GIT_SHA:0:7}
@@ -61,13 +64,6 @@ jobs:
          --service-account=${{ secrets.GCF_SERVICE_ACCOUNT_MABL_DEV }}\
          --set-build-env-vars=GOOGLE_NODE_RUN_SCRIPTS="" \
          --security-level=secure-always
-
-    - name: Auth to Prod
-      if: contains(github.ref, 'refs/tags/')
-      uses: google-github-actions/setup-gcloud@v1
-      with:
-        project_id: 'mabl-prod'
-        service_account_key: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_PROD }}
 
     - name: Deploy to Prod
       if: contains(github.ref, 'refs/tags/')

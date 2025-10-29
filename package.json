@@ -8,17 +8,17 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "scripts": {
     "build": "tsc"
   },
   "dependencies": {
-    "@google-cloud/monitoring": "4.0.0"
+    "@google-cloud/monitoring": "5.3.1"
   },
   "devDependencies": {
     "@types/express": "4.17.17",
-    "@types/node": "18.17.12",
-    "typescript": "5.2.2"
+    "@types/node": "22.18.13",
+    "typescript": "5.9.3"
   }
 }

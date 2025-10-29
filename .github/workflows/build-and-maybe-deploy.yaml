@@ -15,8 +15,8 @@ jobs:
   build-deploy-dev:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
       with:
         node-version-file: '.nvmrc'
         cache: npm
@@ -38,10 +38,10 @@ jobs:
         npm prune --production 
 
     - name: Install gcloud
-      uses: google-github-actions/setup-gcloud@v1
+      uses: google-github-actions/setup-gcloud@v2
 
     - name: Auth gcloud
-      uses: google-github-actions/auth@v1
+      uses: google-github-actions/auth@v2
       if: github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/')
       with:
         project_id: ${{ contains(github.ref, 'refs/tags/') && 'mabl-prod' || 'mabl-dev' }}
@@ -53,7 +53,7 @@ jobs:
         GIT_SHA=${{ github.sha }}
         GIT_SHA_SHORT=${GIT_SHA:0:7}
         gcloud functions deploy ${{ secrets.WEBHOOK_NAME }}\
-         --runtime nodejs18\
+         --runtime nodejs22\
          --trigger-http\
          --update-labels "app_hash=${GIT_SHA_SHORT},app_name=handle_plan_webhook"\
          --project=mabl-dev\
@@ -71,7 +71,7 @@ jobs:
         GIT_SHA=${{ github.sha }}
         GIT_SHA_SHORT=${GIT_SHA:0:7}
         gcloud functions deploy ${{ secrets.WEBHOOK_NAME }}\
-         --runtime nodejs18\
+         --runtime nodejs22\
          --trigger-http\
          --update-labels "app_hash=${GIT_SHA_SHORT},app_name=handle_plan_webhook"\
          --project=mabl-prod\

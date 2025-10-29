@@ -42,13 +42,13 @@ jobs:
 
     - name: Auth gcloud
       uses: google-github-actions/auth@v2
-#      if: github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/')
+      if: github.ref == 'refs/heads/main' || contains(github.ref, 'refs/tags/')
       with:
         project_id: ${{ contains(github.ref, 'refs/tags/') && 'mabl-prod' || 'mabl-dev' }}
         credentials_json: "${{ contains(github.ref, 'refs/tags/') && secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_PROD || secrets.GCP_DEPLOY_SERVICE_ACCOUNT_MABL_DEV }}"
 
     - name: Deploy to Dev
-#      if: github.ref == 'refs/heads/main'
+      if: github.ref == 'refs/heads/main'
       run: |
         GIT_SHA=${{ github.sha }}
         GIT_SHA_SHORT=${GIT_SHA:0:7}

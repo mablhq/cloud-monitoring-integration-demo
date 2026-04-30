@@ -7,11 +7,13 @@
     "url": "https://github.com/mablhq/cloud-monitoring-integration-demo"
   },
   "license": "MIT",
+  "packageManager": "pnpm@10.27.0",
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "pnpm build && node --test test/*.test.cjs"
   },
   "dependencies": {
     "@google-cloud/monitoring": "5.3.1"

@@ -41,34 +41,7 @@ function processResultsAndWriteMetric(
   plan: Plan,
   journeyExecutions: Array<JourneyExecution>
 ): Promise<[protos.google.protobuf.IEmpty, protos.google.monitoring.v3.ICreateTimeSeriesRequest | undefined, {} | undefined]> {
-  const testsFailing = journeyExecutions.filter(execution => execution.status === "failed");
-
-  const dataPoint = {
-    interval: {
-      endTime: {
-        seconds: Date.now() / 1000
-      }
-    },
-    value: {
-      doubleValue: testsFailing.length
-    }
-  };
-
-  const timeSeriesData = {
-    metric: {
-      type: `custom.googleapis.com/mabl/failingTests/${plan.id}`,
-      labels: {
-        plan_name: `${plan.name}`
-      }
-    },
-    resource: {
-      type: "global",
-      labels: {
-        project_id: projectId
-      }
-    },
-    points: [dataPoint]
-  };
+  const timeSeriesData = buildTimeSeriesData(plan, journeyExecutions);
 
   const request = {
     name: client.projectPath(projectId),
@@ -77,4 +50,30 @@ function processResultsAndWriteMetric(
 
   // Writes time series data
   return client.createTimeSeries(request);
+}
+
+export function buildTimeSeriesData(plan: Plan, journeyExecutions: Array<JourneyExecution>) {
+  const testsFailing = journeyExecutions.filter(execution => execution.status === "failed");
+
+  return {
+    metric: {
+      type: `custom.googleapis.com/mabl/failingTests/${plan.id}`
+    },
+    resource: {
+      type: "global",
+      labels: {
+        project_id: projectId
+      }
+    },
+    points: [{
+      interval: {
+        endTime: {
+          seconds: Date.now() / 1000
+        }
+      },
+      value: {
+        doubleValue: testsFailing.length
+      }
+    }]
+  };
 }

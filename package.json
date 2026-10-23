@@ -14,11 +14,11 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@google-cloud/monitoring": "5.3.1"
+    "@google-cloud/monitoring": "6.2.0"
   },
   "devDependencies": {
-    "@types/express": "4.17.17",
-    "@types/node": "22.18.13",
-    "typescript": "5.9.3"
+    "@types/express": "5.0.6",
+    "@types/node": "24.19.2",
+    "typescript": "7.0.2"
   }
 }
